@@ -83,7 +83,7 @@ Un asistente como **Siri, Alexa o Google Assistant**, pero:
         ↓            ↓            ↓
     ┌────────┐  ┌────────┐  ┌────────┐
     │ STT    │  │  LLM   │  │  TTS   │
-    │Whisper │  │ Ollama │  │ Piper  │
+    │Whisper │  │ Ollama │  │Kokoro.js│
     └────────┘  └────────┘  └────────┘
                      │
                      ↓
@@ -162,7 +162,7 @@ npm start
 - **Database:** PostgreSQL (gratis)
 - **LLM:** Ollama + Qwen 3.5 9B (gratis)
 - **STT:** Whisper (gratis)
-- **TTS:** Piper (gratis)
+- **TTS:** Kokoro.js (gratis)
 - **TOTAL:** $0
 
 ---
@@ -185,7 +185,7 @@ Comandos    WebSocket   Speaker ID  Context     Home Asst
 
 **MVP 1:**
 
-- Todo local (Whisper, Ollama, Piper)
+- Todo local (Whisper, Ollama, Kokoro.js)
 - BD local (PostgreSQL)
 - Validación de comandos
 - Logging de auditoría
@@ -261,7 +261,7 @@ orion/
 
 - **Whisper** (via `node-whisper`) - STT
 - **Ollama** - LLM local
-- **Piper** (via `piper-tts`) - TTS
+- **Kokoro.js** - TTS
 
 ### Frontend
 

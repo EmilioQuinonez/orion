@@ -203,7 +203,7 @@ npm install
 # - Prisma
 # - TypeScript
 # - Whisper (node-whisper)
-# - Piper (piper-tts)
+# - Kokoro.js
 # - Jest (testing)
 # - Y más...
 ```
@@ -606,7 +606,7 @@ Node.js:           $0 (gratis)
 PostgreSQL:        $0 (open source)
 Ollama:            $0 (open source)
 Whisper:           $0 (gratis OpenAI)
-Piper:             $0 (open source)
+Kokoro.js:         $0 (open source)
 TypeScript:        $0 (gratis)
 Total:             $0
 ```

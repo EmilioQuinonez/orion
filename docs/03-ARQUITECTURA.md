@@ -95,7 +95,7 @@ orion/
 │   │   └── index.ts                  # Exporta todos
 │   │
 │   ├── service/
-│   │   ├── voiceService.ts           # STT (Whisper) + TTS (Piper)
+│   │   ├── voiceService.ts           # STT (Whisper) + TTS (Kokoro.js)
 │   │   ├── llmService.ts             # Ollama + Intent detection
 │   │   ├── commandService.ts         # Ejecución de comandos
 │   │   ├── memoryService.ts          # Gestión de memoria (MVP 4)
@@ -251,7 +251,7 @@ voice.service.ts
 │   └─ Retorna texto
 │
 ├── synthesize(text)
-│   ├─ Llama Piper local
+│   ├─ Llama Kokoro.js local
 │   ├─ Maneja error si falla
 │   └─ Retorna Buffer audio
 
@@ -501,7 +501,7 @@ constants.ts
    │  └─ Llama Ollama → "Abierto Apple Music para ti"
    │
    └─ voiceService.synthesize()
-      └─ Llama Piper → Audio Buffer
+      └─ Llama Kokoro.js → Audio Buffer
 
 6. MODELS (Persistencia)
    messageModel.create({
@@ -562,7 +562,7 @@ Mismo flujo PERO con:
 
 - **Whisper** (via `node-whisper`) - STT
 - **Ollama** (localhost:11434) - LLM
-- **Piper** (via `piper-tts`) - TTS
+- **Kokoro.js** - TTS
 
 ### Testing
 

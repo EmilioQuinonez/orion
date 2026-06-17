@@ -86,13 +86,13 @@ Este documento cubre MVP 1-3 (primeras 8 semanas de desarrollo). MVPs posteriore
 
 ---
 
-### RF-004: Síntesis de Voz (Piper)
+### RF-004: Síntesis de Voz (Kokoro.js)
 
 **Descripción:** Convertir respuesta a audio reproducible
 
 **Requisitos:**
 
-- Usar `piper-tts` (TypeScript)
+- Usar `kokoro-js` (TypeScript)
 - Voces en español disponibles
 - Reproducción automática en parlantes
 - Calidad aceptable para conversación
@@ -245,7 +245,7 @@ Tiempo máx      | 300s  | 300s | 60s
 
 ### RNF-004: Privacidad
 
-- 100% offline (Whisper, Ollama, Piper local)
+- 100% offline (Whisper, Ollama, Kokoro.js local)
 - BD en disco local (PostgreSQL)
 - Datos NUNCA a terceros sin consentimiento
 - Fallback a Claude API es OPCIONAL
@@ -281,7 +281,7 @@ Tiempo máx      | 300s  | 300s | 60s
 
 - Whisper: Gratis (OpenAI)
 - Ollama: Gratis (open source)
-- Piper: Gratis (open source)
+- Kokoro.js: Gratis (open source)
 - PostgreSQL: Gratis
 - Node.js: Gratis
 

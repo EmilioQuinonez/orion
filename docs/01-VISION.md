@@ -43,7 +43,7 @@ Un **asistente de IA personal que funciona por voz**, identificando quién habla
 
 - **STT (Audio→Texto):** Whisper (via `node-whisper`)
 - **LLM (Inteligencia):** Ollama local → Qwen 3.5 9B
-- **TTS (Texto→Audio):** Piper (via `piper-tts`)
+- **TTS (Texto→Audio):** Kokoro.js
 - **Fallback Cloud:** Claude Code API (opcional, futuro)
 
 ### Integraciones (MVP 5+)
@@ -84,7 +84,7 @@ Los asistentes de voz modernos requieren:
 - Backend funcional (Express + PostgreSQL)
 - STT working (Whisper → texto)
 - LLM working (Ollama → respuestas)
-- TTS working (Piper → audio)
+- TTS working (Kokoro.js → audio)
 - 20+ comandos ejecutándose
 
 ### Mediano Plazo (MVP 3-4, 4-8 semanas)
@@ -206,7 +206,7 @@ Niño habla: "Abre Terminal"
 - Ollama en local (Qwen 3.5 9B)
 - PostgreSQL (relacional)
 - Express.js (simplismo)
-- Whisper + Piper (gratis, offline)
+- Whisper + Kokoro.js (gratis, offline)
 
 ---
 

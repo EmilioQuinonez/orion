@@ -530,9 +530,9 @@ git push origin v0.1.0
 ## 15. Quick Reference: Commits en Orión
 
 ```bash
-# Voz (Whisper + Piper)
+# Voz (Whisper + Kokoro.js)
 git commit -m "feat(voice): implementa STT con Whisper"
-git commit -m "feat(voice): implementa TTS con Piper"
+git commit -m "feat(voice): implementa TTS con Kokoro.js"
 git commit -m "test(voice): cubre casos de error"
 
 # LLM (Ollama)
