@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  name         String
+  role         String    @default("user")
+  voiceProfile String?   @map("voice_profile")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  messages     Message[]
+  settings     Settings?
+
+  @@map("users")
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  role      String
+  content   String
+  action    String?
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("messages")
+}
+
+model Settings {
+  id       String @id @default(uuid())
+  userId   String @unique @map("user_id")
+  language String @default("es")
+  volume   Int    @default(80)
+  timeout  Int    @default(30)
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("settings")
+}
