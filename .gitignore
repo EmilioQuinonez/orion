@@ -157,6 +157,18 @@ orion-log.txt
 tmp-audio.wav
 tmp-output.wav
 tmp-*.wav
+*.wav
 
-# Ollama (modelos no suben)
+# Modelos de ML (pesados, se descargan automáticamente)
 models/
+client/models/
+
+# Python
+client/.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Wake word models (binarios personales, no subir)
+client/models/*.ppn
+client/models/*.onnx
