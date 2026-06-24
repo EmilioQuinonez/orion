@@ -49,21 +49,24 @@ PREROLL_SECS    = 0.4   # audio previo al inicio del habla para no perder fonema
 WAKE_WORDS  = {'orión', 'orion', 'orin', 'orín', 'o rión', 'o rion', 'aurión', 'aurion', 'o rin'}
 EXIT_WORDS  = {'bye', 'adiós', 'adios', 'hasta luego', 'salir', 'cerrar', 'chao'}
 
-KOKORO_PY_VOICE = _env.get('KOKORO_PY_VOICE', 'ef_dora')
-KOKORO_PY_SPEED = float(_env.get('KOKORO_SPEED', '1.0'))
-WHISPER_MODEL   = _env.get('WHISPER_MODEL', 'small')
+ELEVENLABS_API_KEY  = _env.get('ELEVENLABS_API_KEY', '')
+ELEVENLABS_VOICE_ID = _env.get('ELEVENLABS_VOICE_ID', 'EXAVITQu4vr4xnSDxMaL')
+KOKORO_PY_VOICE     = _env.get('KOKORO_PY_VOICE', 'ef_dora')
+KOKORO_PY_SPEED     = float(_env.get('KOKORO_SPEED', '1.0'))
+WHISPER_MODEL       = _env.get('WHISPER_MODEL', 'small')
 
 MODEL_DIR = os.path.join(os.path.dirname(__file__), 'models', 'vosk-model-small-es-0.42')
 MODEL_URL = 'https://alphacephei.com/vosk/models/vosk-model-small-es-0.42.zip'
 
-_SOX_AVAILABLE   = subprocess.run(['which', 'sox'], capture_output=True).returncode == 0
-_kokoro_pipeline = None
-_whisper_model   = None
-_vad             = webrtcvad.Vad(VAD_MODE)
+_SOX_AVAILABLE            = subprocess.run(['which', 'sox'], capture_output=True).returncode == 0
+_kokoro_pipeline          = None
+_whisper_model            = None
+_elevenlabs_quota_exceeded = False
+_vad                      = webrtcvad.Vad(VAD_MODE)
 
 
 # ── Modelos ────────────────────────────────────────────────────────────────────
-def _get_whisper() -> WhisperModel:
+def _get_whisper():
     global _whisper_model
     if _whisper_model is None:
         print(f'Cargando Whisper "{WHISPER_MODEL}" (primera vez puede tardar)...')
@@ -226,12 +229,45 @@ def send_to_orion(text: str) -> dict:
     return r.json()['data']
 
 
-def speak(text: str) -> None:
+def _speak_elevenlabs(text: str) -> bool:
+    """Sintetiza con ElevenLabs. Retorna False si no hay API key o la cuota se agotó."""
+    global _elevenlabs_quota_exceeded
+    if not ELEVENLABS_API_KEY or _elevenlabs_quota_exceeded:
+        return False
+    try:
+        from elevenlabs.client import ElevenLabs
+        client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
+        audio_bytes = b''.join(client.text_to_speech.convert(
+            voice_id=ELEVENLABS_VOICE_ID,
+            text=text,
+            model_id='eleven_multilingual_v2',
+            output_format='pcm_24000',
+        ))
+        audio_np = np.frombuffer(audio_bytes, dtype=np.int16).astype(np.float32) / 32768.0
+        sd.play(audio_np, samplerate=24000, blocking=True)
+        sd.wait()
+        return True
+    except Exception as e:
+        status = getattr(e, 'status_code', None)
+        if status in (402, 429) or any(w in str(e).lower() for w in ('quota', 'exceeded', 'limit')):
+            print(f'[TTS] ElevenLabs sin créditos — usando Kokoro como fallback')
+            _elevenlabs_quota_exceeded = True
+        else:
+            print(f'[TTS] Error ElevenLabs ({e}) — usando Kokoro como fallback')
+        return False
+
+
+def _speak_kokoro(text: str) -> None:
     pipeline = _get_kokoro()
     chunks = [audio for _, _, audio in pipeline(text, voice=KOKORO_PY_VOICE, speed=KOKORO_PY_SPEED)]
     if chunks:
         sd.play(np.concatenate(chunks), samplerate=24000, blocking=True)
         sd.wait()
+
+
+def speak(text: str) -> None:
+    if not _speak_elevenlabs(text):
+        _speak_kokoro(text)
 
 
 def process_frames(frames: List[bytes]) -> Optional[str]:
@@ -279,10 +315,15 @@ def main() -> None:
         print(f'Whisper no disponible: {e}')
         sys.exit(1)
 
-    try:
-        _get_kokoro()
-    except Exception as e:
-        print(f'Kokoro TTS no disponible ({e}), se usara "say" como fallback')
+    if ELEVENLABS_API_KEY:
+        print('ElevenLabs TTS activo (Kokoro como fallback si se agota la cuota)')
+    else:
+        print('ELEVENLABS_API_KEY no configurada — usando Kokoro TTS')
+        try:
+            _get_kokoro()
+        except Exception as e:
+            print(f'Kokoro TTS no disponible: {e}')
+            sys.exit(1)
 
     if _SOX_AVAILABLE:
         print('sox detectado — normalizacion de audio activa')
