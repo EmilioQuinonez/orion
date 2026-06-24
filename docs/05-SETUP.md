@@ -1,6 +1,6 @@
-# SETUP E INSTALACIÓN - Proyecto Orión
+# SETUP E INSTALACIÓN - Proyecto Tessia
 
-**Proyecto:** Orión MVP 1  
+**Proyecto:** Tessia MVP 1  
 **Tiempo Estimado:** 30-45 minutos  
 **Costo:** $0  
 **Complejidad:** Bajo-Medio
@@ -382,7 +382,7 @@ Abre en navegador: http://localhost:3000
 ### Probar un Comando
 
 ```
-"Orión, ¿qué hora es?"
+"Tessia, ¿qué hora es?"
 
 Resultado esperado:
 ├─ Escucha tu voz
@@ -617,7 +617,7 @@ Total:             $0
 
 Para preguntas, consulta los otros documentos:
 
-- 01-VISION.md (qué es Orión)
+- 01-VISION.md (qué es Tessia)
 - 02-SRS.md (requisitos)
 - 03-ARQUITECTURA.md (cómo está hecho)
 - 05-PLAN-CALIDAD.md (cómo testear)

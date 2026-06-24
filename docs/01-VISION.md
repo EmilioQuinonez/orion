@@ -1,6 +1,6 @@
-# VISIÓN - Proyecto Orión
+# VISIÓN - Proyecto Tessia
 
-**Proyecto:** ORIÓN - Asistente de Voz Local Inteligente  
+**Proyecto:** TESSIA - Asistente de Voz Local Inteligente  
 **Stack:** 100% TypeScript (Node.js, Express, React)  
 **Modelos IA:** Qwen 3.5 9B (local via Ollama) + Claude Code (API, opcional)  
 **Costo:** $0 MVP 1-3 | $0-50/mes MVP 5+  
@@ -8,13 +8,13 @@
 
 ---
 
-## ¿Qué es Orión?
+## ¿Qué es Tessia?
 
 Un **asistente de IA personal que funciona por voz**, identificando quién habla, entendiendo comandos en español y ejecutando acciones - completamente en tu máquina.
 
 ### Diferencias Clave vs Competidores
 
-| Feature              | Orión    | Siri       | Alexa  | Google Assistant |
+| Feature              | Tessia    | Siri       | Alexa  | Google Assistant |
 | -------------------- | -------- | ---------- | ------ | ---------------- |
 | **Funciona offline** | ✅       | ⚠️ Parcial | ❌     | ❌               |
 | **Datos locales**    | ✅       | ⚠️ Apple   | ❌ AWS | ❌ Google        |
@@ -66,7 +66,7 @@ Los asistentes de voz modernos requieren:
 - Costos recurrentes ($99-999/año)
 - Limitaciones según región/idioma
 
-### La Solución: Orión
+### La Solución: Tessia
 
 - **Privacidad Radical** - 100% offline, datos en tu máquina
 - **Gratis** - Sin costos recurrentes, código abierto
@@ -108,7 +108,7 @@ Los asistentes de voz modernos requieren:
 
 **"Un asistente de IA inteligente, privado y completamente tuyo"**
 
-### Por qué Orión es especial:
+### Por qué Tessia es especial:
 
 1. **Privacidad Primera** - Datos nunca salen de tu casa
 2. **Tecnología de Punta** - Qwen 3.5 9B + Claude Code
@@ -123,7 +123,7 @@ Los asistentes de voz modernos requieren:
 ### Día a Día
 
 ```
-"Orión, abre Apple Music"              → Abre aplicación
+"Tessia, abre Apple Music"              → Abre aplicación
 "¿Cuál es la capital de Francia?"  → Busca y responde
 "Reproduce música relajante"        → Abre Apple Music con playlist
 "¿Qué hora es?"                     → Te dice la hora
@@ -151,7 +151,7 @@ Niño habla: "Abre Terminal"
 ### MVP 1 Completado Cuando:
 
 - Puedo hablar comandos simples
-- Orión responde por voz clara
+- Tessia responde por voz clara
 - Ejecución sin errores críticos
 - Funciona offline (sin internet)
 - 80%+ tests pasando
@@ -212,7 +212,7 @@ Niño habla: "Abre Terminal"
 
 ## Éxito del Proyecto
 
-Orión es **exitoso** cuando:
+Tessia es **exitoso** cuando:
 
 1. **Funcional:** Ejecuta 90%+ de comandos sin error
 2. **Privado:** Todo local, nada a terceros sin permiso
@@ -240,7 +240,7 @@ MVP 1 (Semana 1-3)      MVP 2 (Semana 4-5)    MVP 3+ (Semana 6+)
 
 ## Conclusión
 
-**Orión** demuestra que es posible tener un asistente de IA inteligente, privado, completo y completamente gratis.
+**Tessia** demuestra que es posible tener un asistente de IA inteligente, privado, completo y completamente gratis.
 
 No es una alternativa a Siri/Alexa. Es **tu propia asistente personal**, controlada por ti, para ti, sin intermediarios.
 

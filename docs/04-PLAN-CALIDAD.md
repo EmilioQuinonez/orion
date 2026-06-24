@@ -1,6 +1,6 @@
-# PLAN DE CALIDAD - Proyecto Orión
+# PLAN DE CALIDAD - Proyecto Tessia
 
-**Proyecto:** Orión  
+**Proyecto:** Tessia  
 **Objetivo:** Mantener código limpio, testeable y bien documentado
 
 ---
@@ -56,7 +56,7 @@ npm test -- --watch
 | `test`     | Agregar/modificar tests        | `test(voice): cubre casos de error en STT`         |
 | `chore`    | Tareas sin código funcional    | `chore: actualiza dependencias npm`                |
 
-### Ejemplos Reales para Orión
+### Ejemplos Reales para Tessia
 
 ```bash
 # Feature nueva
@@ -527,7 +527,7 @@ git push origin v0.1.0
 
 ---
 
-## 15. Quick Reference: Commits en Orión
+## 15. Quick Reference: Commits en Tessia
 
 ```bash
 # Voz (Whisper + Kokoro.js)
