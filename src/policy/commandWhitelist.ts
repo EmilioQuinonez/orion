@@ -26,6 +26,7 @@ export type ActionName =
     | "open_browser"
     | "open_maps"
     | "get_battery"
+    | "get_weather"
     | "general_question";
 
 export const ALLOWED_ACTIONS = new Set<ActionName>([
@@ -56,6 +57,7 @@ export const ALLOWED_ACTIONS = new Set<ActionName>([
     "open_browser",
     "open_maps",
     "get_battery",
+    "get_weather",
     "general_question",
 ]);
 

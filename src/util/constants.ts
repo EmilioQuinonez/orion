@@ -48,6 +48,7 @@ Acciones disponibles:
 - open_browser: Abrir navegador web. params: {}
 - open_maps: Abrir mapas. params: {}
 - get_battery: Estado de batería. params: {}
+- get_weather: Obtener el clima o temperatura actual. Usar cuando dice: qué temperatura, cómo está el clima, qué tiempo hace, va a llover, probabilidad de lluvia. params: {"city": "nombre de ciudad (opcional, vacío para ubicación actual)"}
 - general_question: Pregunta o conversación general. params: {"question": "la pregunta completa"}
 
 Ejemplos:
@@ -65,4 +66,8 @@ Ejemplos:
 "¿qué hora es?" → {"action":"get_time","params":{}}
 "busca recetas de pasta" → {"action":"search_web","params":{"query":"recetas de pasta"}}
 "sube el volumen" → {"action":"volume_up","params":{}}
-"¿cuál es la capital de Francia?" → {"action":"general_question","params":{"question":"¿cuál es la capital de Francia?"}}`;
+"¿cuál es la capital de Francia?" → {"action":"general_question","params":{"question":"¿cuál es la capital de Francia?"}}
+"¿qué temperatura hace?" → {"action":"get_weather","params":{}}
+"¿cómo está el clima?" → {"action":"get_weather","params":{}}
+"¿va a llover hoy?" → {"action":"get_weather","params":{}}
+"¿qué clima hace en Monterrey?" → {"action":"get_weather","params":{"city":"Monterrey"}}`;

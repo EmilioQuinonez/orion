@@ -318,6 +318,32 @@ const handlers: Record<
         return `Batería al ${level}%${charging}`;
     },
 
+    get_weather: async (p) => {
+        const city = p["city"] ? encodeURIComponent(sanitizeParam(String(p["city"]))) : "";
+        const json = await run("curl", ["--silent", `wttr.in/${city}?format=j1`]);
+        const data = JSON.parse(json) as {
+            current_condition: Array<{
+                temp_C: string; FeelsLikeC: string;
+                weatherDesc: Array<{ value: string }>;
+            }>;
+            weather: Array<{ hourly: Array<{ chanceofrain: string }> }>;
+            nearest_area: Array<{
+                areaName: Array<{ value: string }>;
+                country: Array<{ value: string }>;
+            }>;
+        };
+        const c = data.current_condition[0];
+        const rainChance = Math.max(...data.weather[0].hourly.map(h => parseInt(h.chanceofrain)));
+        const location = data.nearest_area[0].areaName[0].value;
+        const country = data.nearest_area[0].country[0].value;
+        return [
+            `Ubicación: ${location}, ${country}`,
+            `Condición: ${c.weatherDesc[0].value}`,
+            `Temperatura: ${c.temp_C}°C (sensación ${c.FeelsLikeC}°C)`,
+            `Probabilidad de lluvia hoy: ${rainChance}%`,
+        ].join(", ");
+    },
+
     general_question: async () => {
         return "__LLM_ANSWER__";
     },
