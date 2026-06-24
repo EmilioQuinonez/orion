@@ -49,6 +49,7 @@ Acciones disponibles:
 - open_maps: Abrir mapas. params: {}
 - get_battery: Estado de batería. params: {}
 - get_weather: Obtener el clima o temperatura actual. Usar cuando dice: qué temperatura, cómo está el clima, qué tiempo hace, va a llover, probabilidad de lluvia. params: {"city": "nombre de ciudad (opcional, vacío para ubicación actual)"}
+- get_forecast: Pronóstico del clima para un día específico. Usar cuando dice: mañana, pasado mañana, qué clima habrá, cómo estará el tiempo. params: {"day": "hoy|mañana|pasado mañana", "city": "opcional"}
 - general_question: Pregunta o conversación general. params: {"question": "la pregunta completa"}
 
 Ejemplos:
@@ -70,4 +71,6 @@ Ejemplos:
 "¿qué temperatura hace?" → {"action":"get_weather","params":{}}
 "¿cómo está el clima?" → {"action":"get_weather","params":{}}
 "¿va a llover hoy?" → {"action":"get_weather","params":{}}
-"¿qué clima hace en Monterrey?" → {"action":"get_weather","params":{"city":"Monterrey"}}`;
+"¿qué clima hace en Monterrey?" → {"action":"get_weather","params":{"city":"Monterrey"}}
+"¿cómo estará el clima mañana?" → {"action":"get_forecast","params":{"day":"mañana"}}
+"¿va a llover pasado mañana en Guadalajara?" → {"action":"get_forecast","params":{"day":"pasado mañana","city":"Guadalajara"}}`;

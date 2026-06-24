@@ -344,6 +344,46 @@ const handlers: Record<
         ].join(", ");
     },
 
+    get_forecast: async (p) => {
+        const city = p["city"] ? encodeURIComponent(sanitizeParam(String(p["city"]))) : "";
+        const dayParam = String(p["day"] ?? "mañana").toLowerCase();
+
+        const json = await run("curl", ["--silent", `wttr.in/${city}?format=j1`]);
+        const data = JSON.parse(json) as {
+            current_condition: Array<object>;
+            weather: Array<{
+                date: string;
+                maxtempC: string;
+                mintempC: string;
+                hourly: Array<{ chanceofrain: string; weatherDesc: Array<{ value: string }> }>;
+            }>;
+            nearest_area: Array<{
+                areaName: Array<{ value: string }>;
+                country: Array<{ value: string }>;
+            }>;
+        };
+
+        let dayIndex = 1;
+        if (dayParam.includes("hoy")) dayIndex = 0;
+        else if (dayParam.includes("pasado")) dayIndex = 2;
+
+        const dayData = data.weather[dayIndex];
+        if (!dayData) return "Solo tengo pronóstico para los próximos 3 días";
+
+        const rainChance = Math.max(...dayData.hourly.map(h => parseInt(h.chanceofrain)));
+        const condition = dayData.hourly[4]?.weatherDesc[0]?.value ?? dayData.hourly[0]?.weatherDesc[0]?.value;
+        const location = data.nearest_area[0].areaName[0].value;
+        const country = data.nearest_area[0].country[0].value;
+        const dayLabel = ["Hoy", "Mañana", "Pasado mañana"][dayIndex];
+
+        return [
+            `Pronóstico ${dayLabel} en ${location}, ${country}`,
+            `Condición: ${condition}`,
+            `Temperatura: ${dayData.mintempC}°C mín — ${dayData.maxtempC}°C máx`,
+            `Probabilidad de lluvia: ${rainChance}%`,
+        ].join(", ");
+    },
+
     general_question: async () => {
         return "__LLM_ANSWER__";
     },
