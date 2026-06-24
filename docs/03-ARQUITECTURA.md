@@ -1,6 +1,6 @@
-# ARQUITECTURA - Proyecto Orión
+# ARQUITECTURA - Proyecto Tessia
 
-**Proyecto:** Orión MVP 1  
+**Proyecto:** Tessia MVP 1  
 **Patrón:** MVC + Service Layer  
 **Validación:** Manual MVP 1 → Zod MVP 2+ (cuando haya frontend)  
 **Control de Acceso:** Políticas ABAC (MVP 3+)
@@ -17,9 +17,9 @@
                        │ Audio PCM 16kHz
                        ↓
 ┌─────────────────────────────────────────────────────┐
-│         CLIENTE PYTHON (client/orion_client.py)     │
+│         CLIENTE PYTHON (client/tessia_client.py)     │
 │   - WebRTC VAD  → detecta voz real                  │
-│   - Vosk        → detecta wake word "Orión"         │
+│   - Vosk        → detecta wake word "Tessia"         │
 │   - faster-whisper → transcribe el comando          │
 │   - Kokoro TTS  → sintetiza la respuesta            │
 └──────────────────────┬──────────────────────────────┘
@@ -79,7 +79,7 @@
 orion/
 │
 ├── client/                           # Cliente de voz Python
-│   ├── orion_client.py               # Pipeline completo: VAD + wake word + STT + TTS
+│   ├── tessia_client.py               # Pipeline completo: VAD + wake word + STT + TTS
 │   ├── requirements.txt              # Dependencias Python
 │   └── models/                       # Modelos descargados automáticamente (git-ignored)
 │       └── vosk-model-small-es-0.42/
@@ -545,7 +545,7 @@ Mismo flujo PERO con:
 ### Voice Intelligence (Cliente Python — Locales)
 
 - **WebRTC VAD** (`webrtcvad`) - Detección de voz
-- **Vosk** (modelo español 45MB) - Wake word "Orión"
+- **Vosk** (modelo español 45MB) - Wake word "Tessia"
 - **faster-whisper** - STT (transcripción)
 - **Kokoro** (voz ef_dora) - TTS
 - **Ollama** (localhost:11434) - LLM local

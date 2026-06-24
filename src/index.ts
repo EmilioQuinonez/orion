@@ -10,7 +10,7 @@ async function start(): Promise<void> {
     logger.info('Base de datos conectada');
 
     app.listen(config.port, () => {
-      logger.info(`Orión corriendo en http://localhost:${config.port}`);
+      logger.info(`Tessia corriendo en http://localhost:${config.port}`);
       logger.info(`Ollama: ${config.ollamaUrl} | Modelo: ${config.ollamaModel}`);
       logger.info('Endpoints: POST /api/voice/process | GET /api/health');
     });

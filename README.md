@@ -1,4 +1,4 @@
-# ORIÓN - Asistente de Voz IA Local
+# TESSIA - Asistente de Voz IA Local
 
 [![Status](https://img.shields.io/badge/status-MVP%201-blue?style=flat-square)]()
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.2+-blue?style=flat-square)]()
@@ -9,7 +9,7 @@
 Un **asistente de IA personal por voz** que funciona completamente en local, respeta tu privacidad y está bajo tu control total.
 
 ```
-"Orión, abre Apple Music"
+"Tessia, abre Apple Music"
 "¿Cuál es la capital de Francia?"
 "Reproduce música relajante"
 
@@ -50,7 +50,7 @@ npm run client
 
 ---
 
-## ¿Qué es Orión?
+## ¿Qué es Tessia?
 
 ### La Idea
 
@@ -63,7 +63,7 @@ Un asistente como **Siri, Alexa o Google Assistant**, pero:
 
 ### Vs. Competidores
 
-| Feature          | Orión | Siri | Alexa | Google |
+| Feature          | Tessia | Siri | Alexa | Google |
 | ---------------- | ----- | ---- | ----- | ------ |
 | Privado          | ✅    | ⚠️   | ❌    | ❌     |
 | Funciona Offline | ✅    | ⚠️   | ❌    | ❌     |
@@ -77,13 +77,13 @@ Un asistente como **Siri, Alexa o Google Assistant**, pero:
 ```
 ┌──────────────────────────────────────┐
 │         CLIENTE PYTHON               │
-│  client/orion_client.py              │
+│  client/tessia_client.py              │
 │                                      │
 │  Micrófono                           │
 │      ↓                               │
 │  WebRTC VAD  ← detecta voz real      │
 │      ↓                               │
-│  Vosk        ← detecta "Orión"       │
+│  Vosk        ← detecta "Tessia"       │
 │      ↓                               │
 │  faster-whisper ← transcribe comando │
 │      ↓                               │
@@ -189,7 +189,7 @@ npm start
 | Componente | Librería | Función |
 |---|---|---|
 | VAD | `webrtcvad` | Detecta si hay voz real (no amplitud) |
-| Wake word | `vosk` | Detecta "Orión" en tiempo real |
+| Wake word | `vosk` | Detecta "Tessia" en tiempo real |
 | STT | `faster-whisper` | Transcribe el comando |
 | TTS | `kokoro` | Sintetiza la respuesta en voz |
 | Audio | `sounddevice` | Captura y reproduce audio |
@@ -255,10 +255,10 @@ brew services start postgresql   # macOS
 cd client && .venv/bin/pip install -r requirements.txt
 ```
 
-### El cliente no detecta "Orión"
+### El cliente no detecta "Tessia"
 ```bash
 # Activar modo debug para ver qué escucha Vosk
-ORION_DEBUG=1 npm run client
+TESSIA_DEBUG=1 npm run client
 ```
 
 ### Kokoro tarda mucho la primera vez

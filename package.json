@@ -8,7 +8,7 @@
     "main": "dist/src/index.js",
     "type": "module",
     "scripts": {
-        "client": "client/.venv/bin/python3 client/orion_client.py",
+        "client": "client/.venv/bin/python3 -u client/tessia_client.py",
         "client:setup": "client/.venv/bin/pip install -r client/requirements.txt",
         "dev": "tsx src/index.ts",
         "dev:watch": "nodemon --exec tsx src/index.ts",
