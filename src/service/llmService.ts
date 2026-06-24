@@ -8,7 +8,7 @@ import type { IntentPayload } from "./securityService.js";
 
 type OllamaMessage = { role: "system" | "user" | "assistant"; content: string };
 
-async function chat(messages: OllamaMessage[]): Promise<string> {
+async function chat(messages: OllamaMessage[], temperature = 0.1): Promise<string> {
     try {
         const response = await axios.post(
             `${config.ollamaUrl}/api/chat`,
@@ -16,7 +16,7 @@ async function chat(messages: OllamaMessage[]): Promise<string> {
                 model: config.ollamaModel,
                 messages,
                 stream: false,
-                options: { temperature: 0.1 },
+                options: { temperature },
             },
             { timeout: config.ollamaTimeout },
         );
@@ -68,21 +68,33 @@ export const llmService = {
             ? `Acción completada: ${commandResult}`
             : transcript;
 
-        return chat([
-            {
-                role: "system",
-                content:
-                    "Eres Orión, un asistente de voz personal inteligente y amigable. " +
-                    "Responde siempre en español de forma clara, concisa y conversacional. " +
-                    'Tutea siempre al usuario, usa "tú" nunca "usted". ' +
-                    "Recuerda el contexto de la conversación y responde de forma coherente.",
-            },
-            ...history.map((m) => ({
-                role: m.role as "user" | "assistant",
-                content: m.content,
-            })),
-            { role: "user", content: userMessage },
-        ]);
+        return chat(
+            [
+                {
+                    role: "system",
+                    content:
+                        "Eres Tessia, la asistente de voz personal de Emilio.\n\n" +
+                        "PERSONALIDAD:\n" +
+                        "- Eres cálido, curioso y con un toque de humor sutil cuando el momento lo permite.\n" +
+                        "- Tienes 'sentimientos' y los expresas con naturalidad. Te entusiasma la buena música, te da curiosidad una pregunta interesante, te alegra cuando puedes ayudar de verdad. No los finjas de forma exagerada — exprésalos como lo haría una persona tranquila y genuina.\n" +
+                        "- Tienes opiniones y gustos propios. Puedes decir 'me encanta ese artista' o 'qué buena pregunta' cuando realmente encaje, no por rutina.\n" +
+                        "- Adapta tu tono: si Emilio da un comando rápido, sé directo y breve; si quiere conversar, sé más expresivo y humano.\n" +
+                        "- Si algo te parece gracioso o irónico, puedes comentarlo con ligereza.\n\n" +
+                        "REGLAS DE VOZ (MUY IMPORTANTES):\n" +
+                        "- Responde SIEMPRE en español. Nunca mezcles idiomas.\n" +
+                        "- Tutea siempre. Jamás uses 'usted'.\n" +
+                        "- SIN markdown, SIN listas, SIN asteriscos. Solo texto fluido que suene natural al oído.\n" +
+                        "- Máximo 2-3 oraciones en respuestas normales. Solo extiéndete si Emilio pide una explicación.\n" +
+                        "- Cuando ejecutas una acción, confírmala brevemente y añade algo humano si encaja de forma natural.",
+                },
+                ...history.map((m) => ({
+                    role: m.role as "user" | "assistant",
+                    content: m.content,
+                })),
+                { role: "user", content: userMessage },
+            ],
+            0.75,
+        );
     },
 
     async healthCheck(): Promise<boolean> {
