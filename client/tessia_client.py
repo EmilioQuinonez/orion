@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Orión — Cliente de voz con WebRTC VAD
-Di "Orión" para activar. El sistema detecta automáticamente cuándo empiezas
+Tessia — Cliente de voz con WebRTC VAD
+Di "Tessia" para activar. El sistema detecta automáticamente cuándo empiezas
 y terminas de hablar usando WebRTC VAD en lugar de umbral de amplitud.
 """
 
@@ -28,7 +28,7 @@ SetLogLevel(-1)
 
 # ── Config ─────────────────────────────────────────────────────────────────────
 _env = dotenv_values(os.path.join(os.path.dirname(__file__), '..', '.env'))
-DEBUG = os.environ.get('ORION_DEBUG', '').lower() in ('1', 'true')
+DEBUG = os.environ.get('TESSIA_DEBUG', '').lower() in ('1', 'true')
 
 API_URL         = f"http://localhost:{_env.get('PORT', '3000')}/api"
 SAMPLE_RATE     = 16000
@@ -46,24 +46,27 @@ MAX_SECS        = float(_env.get('MAX_RECORD_SECS', '15.0'))
 CONV_TIMEOUT    = float(_env.get('CONVERSATION_TIMEOUT', '30.0'))
 PREROLL_SECS    = 0.4   # audio previo al inicio del habla para no perder fonemas iniciales
 
-WAKE_WORDS  = {'orión', 'orion', 'orin', 'orín', 'o rión', 'o rion', 'aurión', 'aurion', 'o rin'}
+WAKE_WORDS  = {'tessia', 'tesia', 'te sia', 'tecia', 'te ssia', 'tres sia', 'decía', 'te decía'}
 EXIT_WORDS  = {'bye', 'adiós', 'adios', 'hasta luego', 'salir', 'cerrar', 'chao'}
 
-KOKORO_PY_VOICE = _env.get('KOKORO_PY_VOICE', 'ef_dora')
-KOKORO_PY_SPEED = float(_env.get('KOKORO_SPEED', '1.0'))
-WHISPER_MODEL   = _env.get('WHISPER_MODEL', 'small')
+ELEVENLABS_API_KEY  = _env.get('ELEVENLABS_API_KEY', '')
+ELEVENLABS_VOICE_ID = _env.get('ELEVENLABS_VOICE_ID', 'EXAVITQu4vr4xnSDxMaL')
+KOKORO_PY_VOICE     = _env.get('KOKORO_PY_VOICE', 'ef_dora')
+KOKORO_PY_SPEED     = float(_env.get('KOKORO_SPEED', '1.0'))
+WHISPER_MODEL       = _env.get('WHISPER_MODEL', 'small')
 
 MODEL_DIR = os.path.join(os.path.dirname(__file__), 'models', 'vosk-model-small-es-0.42')
 MODEL_URL = 'https://alphacephei.com/vosk/models/vosk-model-small-es-0.42.zip'
 
-_SOX_AVAILABLE   = subprocess.run(['which', 'sox'], capture_output=True).returncode == 0
-_kokoro_pipeline = None
-_whisper_model   = None
-_vad             = webrtcvad.Vad(VAD_MODE)
+_SOX_AVAILABLE            = subprocess.run(['which', 'sox'], capture_output=True).returncode == 0
+_kokoro_pipeline          = None
+_whisper_model            = None
+_elevenlabs_quota_exceeded = False
+_vad                      = webrtcvad.Vad(VAD_MODE)
 
 
 # ── Modelos ────────────────────────────────────────────────────────────────────
-def _get_whisper() -> WhisperModel:
+def _get_whisper():
     global _whisper_model
     if _whisper_model is None:
         print(f'Cargando Whisper "{WHISPER_MODEL}" (primera vez puede tardar)...')
@@ -213,25 +216,58 @@ def record_with_vad(
 
 
 def drain_stream(stream: sd.RawInputStream, secs: float = 0.5) -> None:
-    """Descarta el audio acumulado mientras Orión estaba hablando."""
+    """Descarta el audio acumulado mientras Tessia estaba hablando."""
     n = int(secs * 1000 / FRAME_MS)
     for _ in range(n):
         stream.read(FRAME_SAMPLES)
 
 
 # ── API y síntesis ─────────────────────────────────────────────────────────────
-def send_to_orion(text: str) -> dict:
+def send_to_tessia(text: str) -> dict:
     r = requests.post(f"{API_URL}/voice/chat", json={'text': text}, timeout=180)
     r.raise_for_status()
     return r.json()['data']
 
 
-def speak(text: str) -> None:
+def _speak_elevenlabs(text: str) -> bool:
+    """Sintetiza con ElevenLabs. Retorna False si no hay API key o la cuota se agotó."""
+    global _elevenlabs_quota_exceeded
+    if not ELEVENLABS_API_KEY or _elevenlabs_quota_exceeded:
+        return False
+    try:
+        from elevenlabs.client import ElevenLabs
+        client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
+        audio_bytes = b''.join(client.text_to_speech.convert(
+            voice_id=ELEVENLABS_VOICE_ID,
+            text=text,
+            model_id='eleven_multilingual_v2',
+            output_format='pcm_24000',
+        ))
+        audio_np = np.frombuffer(audio_bytes, dtype=np.int16).astype(np.float32) / 32768.0
+        sd.play(audio_np, samplerate=24000, blocking=True)
+        sd.wait()
+        return True
+    except Exception as e:
+        status = getattr(e, 'status_code', None)
+        if status in (402, 429) or any(w in str(e).lower() for w in ('quota', 'exceeded', 'limit')):
+            print(f'[TTS] ElevenLabs sin créditos — usando Kokoro como fallback')
+            _elevenlabs_quota_exceeded = True
+        else:
+            print(f'[TTS] Error ElevenLabs ({e}) — usando Kokoro como fallback')
+        return False
+
+
+def _speak_kokoro(text: str) -> None:
     pipeline = _get_kokoro()
     chunks = [audio for _, _, audio in pipeline(text, voice=KOKORO_PY_VOICE, speed=KOKORO_PY_SPEED)]
     if chunks:
         sd.play(np.concatenate(chunks), samplerate=24000, blocking=True)
         sd.wait()
+
+
+def speak(text: str) -> None:
+    if not _speak_elevenlabs(text):
+        _speak_kokoro(text)
 
 
 def process_frames(frames: List[bytes]) -> Optional[str]:
@@ -247,8 +283,8 @@ def process_frames(frames: List[bytes]) -> Optional[str]:
             print('No se detectó voz\n')
             return None
         print(f'Tu: "{transcript}"')
-        result = send_to_orion(transcript)
-        print(f'Orion: "{result["response"]}"\n')
+        result = send_to_tessia(transcript)
+        print(f'Tessia: "{result["response"]}"\n')
         speak(result['response'])
         return transcript
     except requests.RequestException as e:
@@ -269,7 +305,7 @@ def main() -> None:
     print('Cargando modelo Vosk (vocabulario completo para mejor deteccion del wake word)...')
     vosk_model = Model(MODEL_DIR)
     # Sin gramática restringida: Vosk usa vocabulario completo.
-    # La gramática restringida ["orion", "[unk]"] causaba demasiados falsos negativos
+    # La gramática restringida ["tessia", "[unk]"] causaba demasiados falsos negativos
     # porque forzaba al modelo a encajar cualquier audio en sólo dos tokens.
     rec = KaldiRecognizer(vosk_model, SAMPLE_RATE)
 
@@ -279,15 +315,20 @@ def main() -> None:
         print(f'Whisper no disponible: {e}')
         sys.exit(1)
 
-    try:
-        _get_kokoro()
-    except Exception as e:
-        print(f'Kokoro TTS no disponible ({e}), se usara "say" como fallback')
+    if ELEVENLABS_API_KEY:
+        print('ElevenLabs TTS activo (Kokoro como fallback si se agota la cuota)')
+    else:
+        print('ELEVENLABS_API_KEY no configurada — usando Kokoro TTS')
+        try:
+            _get_kokoro()
+        except Exception as e:
+            print(f'Kokoro TTS no disponible: {e}')
+            sys.exit(1)
 
     if _SOX_AVAILABLE:
         print('sox detectado — normalizacion de audio activa')
 
-    print(f'Orion listo — VAD modo {VAD_MODE} — di "Orion" para activar\n')
+    print(f'Tessia lista — VAD modo {VAD_MODE} — di "Tessia" para activar\n')
 
     with sd.RawInputStream(
         samplerate=SAMPLE_RATE,
@@ -329,6 +370,7 @@ def main() -> None:
 
             # ── Wake word detectado — grabar primer comando ────────────────────
             beep()
+            drain_stream(stream, secs=0.3)
             print('Habla...')
             frames = record_with_vad(stream, MAX_SECS, SIL_SECS, require_speech=True)
 
@@ -346,7 +388,7 @@ def main() -> None:
                 frames = record_with_vad(stream, CONV_TIMEOUT, SIL_SECS, require_speech=True)
 
                 if frames is None:
-                    print('Di "Orion" para activar\n')
+                    print('Di "Tessia" para activar\n')
                     in_conversation = False
                     continue
 
@@ -366,4 +408,4 @@ if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        print('\nCerrando Orion...')
+        print('\nCerrando Tessia...')

@@ -1,4 +1,4 @@
-# ROADMAP - Proyecto Orión
+# ROADMAP - Proyecto Tessia
 
 Registro de mejoras planeadas. Ordenadas por prioridad e impacto.
 
@@ -6,18 +6,18 @@ Registro de mejoras planeadas. Ordenadas por prioridad e impacto.
 
 ## Capa de Voz (cliente Python)
 
-### 1. OpenWakeWord — wake word dedicado para "Orión"
+### 1. OpenWakeWord — wake word dedicado para "Tessia"
 **Por qué:** Vosk es un modelo de transcripción general, no está optimizado para detectar una sola palabra. OpenWakeWord es un modelo neural diseñado específicamente para wake words, consume menos CPU y tiene menos falsos positivos/negativos.
 
 **Qué hay que hacer:**
-1. Grabar 20-50 ejemplos de tu voz diciendo "Orión" en condiciones variadas (cerca, lejos, con ruido)
+1. Grabar 20-50 ejemplos de tu voz diciendo "Tessia" en condiciones variadas (cerca, lejos, con ruido)
 2. Entrenar un modelo `.onnx` con los scripts de fine-tuning de OpenWakeWord
-3. Reemplazar el bloque de Vosk en el bucle de wake word de `orion_client.py`:
+3. Reemplazar el bloque de Vosk en el bucle de wake word de `tessia_client.py`:
    ```python
    # En vez de Vosk leyendo texto y buscando "orion"...
-   model = openwakeword.Model(wakeword_models=['orion_custom.onnx'])
+   model = openwakeword.Model(wakeword_models=['tessia_custom.onnx'])
    prediction = model.predict(frame)
-   if prediction['orion_custom'] > 0.5:
+   if prediction['tessia_custom'] > 0.5:
        # activar
    ```
 4. El modelo `.onnx` va en `client/models/` (git-ignored)
@@ -39,7 +39,7 @@ Registro de mejoras planeadas. Ordenadas por prioridad e impacto.
 ---
 
 ### 3. Modularizar el cliente Python
-**Por qué:** Cuando se agreguen OpenWakeWord y Silero, `orion_client.py` superará las 500-600 líneas y será difícil de mantener.
+**Por qué:** Cuando se agreguen OpenWakeWord y Silero, `tessia_client.py` superará las 500-600 líneas y será difícil de mantener.
 
 **Estructura propuesta:**
 ```
@@ -59,7 +59,7 @@ client/
 ---
 
 ### 4. Reconocimiento de hablante (Speaker Verification)
-**Por qué:** Que Orión solo responda a tu voz, no a cualquier persona en la habitación.
+**Por qué:** Que Tessia solo responda a tu voz, no a cualquier persona en la habitación.
 
 **Librerías candidatas:**
 - `resemblyzer` — embeddings de voz ligeros
@@ -81,8 +81,8 @@ Similitud < 0.85 → ignorar
 
 ---
 
-### 5. Barge-in (interrumpir a Orión mientras habla)
-**Por qué:** Siri y Alexa te dejan interrumpirlas. Ahora Orión termina de hablar antes de volver a escuchar.
+### 5. Barge-in (interrumpir a Tessia mientras habla)
+**Por qué:** Siri y Alexa te dejan interrumpirlas. Ahora Tessia termina de hablar antes de volver a escuchar.
 
 **Qué hay que hacer:**
 - Escuchar el micrófono en un hilo separado mientras Kokoro reproduce
@@ -100,7 +100,7 @@ Similitud < 0.85 → ignorar
 ---
 
 ### 7. Memoria conversacional
-**Por qué:** Que Orión recuerde cosas entre sesiones ("¿recuerdas lo que te dije ayer sobre...?").
+**Por qué:** Que Tessia recuerde cosas entre sesiones ("¿recuerdas lo que te dije ayer sobre...?").
 
 **Qué hay que hacer:**
 - Crear `memoryService.ts` y `memoryModel.ts`
@@ -119,14 +119,14 @@ Similitud < 0.85 → ignorar
 
 ### 9. Integración con Home Assistant (MVP 5+)
 - Control de luces, enchufes, termostatos
-- Trigger desde Orión: "apaga las luces de la sala"
+- Trigger desde Tessia: "apaga las luces de la sala"
 
 ---
 
 ## Infraestructura
 
 ### 10. Tests del cliente Python
-**Por qué:** Ahora no hay tests para `orion_client.py`. Si se modulariza (punto 3), cada módulo debería tener tests.
+**Por qué:** Ahora no hay tests para `tessia_client.py`. Si se modulariza (punto 3), cada módulo debería tener tests.
 
 **Herramienta:** `pytest`
 

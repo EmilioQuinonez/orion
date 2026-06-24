@@ -1,6 +1,6 @@
 # SRS - Especificación de Requisitos de Software
 
-**Proyecto:** Orión - Asistente de Voz Local  
+**Proyecto:** Tessia - Asistente de Voz Local  
 **Versión:** 1.1  
 **Fecha:** Junio 2026  
 **Estado:** MVP 1 completado
@@ -51,7 +51,7 @@ Este documento cubre MVP 1-3 (primeras 8 semanas de desarrollo). MVPs posteriore
 
 ### RF-001b: Detección de Wake Word (Vosk)
 
-**Descripción:** El sistema debe escuchar pasivamente y activarse solo al detectar "Orión"
+**Descripción:** El sistema debe escuchar pasivamente y activarse solo al detectar "Tessia"
 
 **Requisitos:**
 
@@ -63,7 +63,7 @@ Este documento cubre MVP 1-3 (primeras 8 semanas de desarrollo). MVPs posteriore
 
 **Criterios de Aceptación:**
 
-- [x] Activa con "Orión" en condiciones normales
+- [x] Activa con "Tessia" en condiciones normales
 - [x] Permanece en modo conversación tras el primer comando
 - [x] Se desactiva con palabra de salida
 
@@ -339,7 +339,7 @@ Tiempo máx      | 300s  | 300s | 60s
 
 ### RB-006: Escalabilidad a Familia
 
-**Declaración:** Orión funciona para 1 persona, pero está diseñado para familia
+**Declaración:** Tessia funciona para 1 persona, pero está diseñado para familia
 
 - Multi-usuario desde MVP 3
 - Permisos por rol
@@ -373,7 +373,7 @@ Demostrar que es posible tener un asistente tan bueno como Siri/Alexa pero compl
 ```
 Usuario habla:
   ↓
-"Orión, abre Apple Music"
+"Tessia, abre Apple Music"
   ↓
 Sistema responde:
   "Abriendo Apple Music"
